@@ -53,8 +53,7 @@ const RootQuery = new GraphQLObjectType({
       args: { id: { type: GraphQLID } },
       resolve(parent, args) {
         //  Code to get data from db/other source
-
-        return _.find(books, { id: args.id });
+        //return _.find(books, { id: args.id });
       }
     },
     author: {
@@ -78,7 +77,28 @@ const RootQuery = new GraphQLObjectType({
     }
   }
 });
+const Mutation = new GraphQLObjectType({
+  name: 'Mutation',
+  fields: {
+    addAuthor: {
+      type: AuthorType,
+      args: {
+        name: { type: GraphQLString },
+        age: { type: GraphQLInt }
+      },
+      resolve(parent, args) {
+        let author = new Author({
+          name: args.name,
+          age: args.age
+        });
+        return author.save();
+      }
+    }
+  }
+});
+// Mutations
 
 module.exports = new GraphQLSchema({
-  query: RootQuery
+  query: RootQuery,
+  mutation: Mutation
 });
